@@ -1,0 +1,276 @@
+{
+  "generatedAt": "2026-08-27T12:51:36.863Z",
+  "collections": [
+    {
+      "name": "users",
+      "type": "auth",
+      "apiRules": {
+        "list": "id = @request.auth.id",
+        "view": "id = @request.auth.id",
+        "create": "",
+        "update": "id = @request.auth.id",
+        "delete": "id = @request.auth.id"
+      },
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "avatar",
+          "type": "file",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        },
+        {
+          "name": "role",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["vendedor", "gestor"]
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX `idx_tokenKey__pb_users_auth_` ON `users` (`tokenKey`)",
+        "CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users` (`email`) WHERE `email` != ''"
+      ]
+    },
+    {
+      "name": "deals",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || owner.id = @request.auth.id)",
+        "view": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || owner.id = @request.auth.id)",
+        "create": "@request.auth.id != \"\"",
+        "update": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || owner.id = @request.auth.id)",
+        "delete": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || owner.id = @request.auth.id)"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "customer_name",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "customer_email",
+          "type": "email",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "customer_phone",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "stage",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": ["lead", "contato-feito", "proposta", "negociacao", "ganho", "perdido"]
+        },
+        {
+          "name": "owner",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "expected_close_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_deals_stage ON deals (stage)",
+        "CREATE INDEX idx_deals_owner ON deals (owner)",
+        "CREATE INDEX idx_deals_created ON deals (created DESC)",
+        "CREATE INDEX idx_deals_owner_stage ON deals (owner, stage)"
+      ]
+    },
+    {
+      "name": "activities",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || deal.owner.id = @request.auth.id || created_by.id = @request.auth.id)",
+        "view": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || deal.owner.id = @request.auth.id || created_by.id = @request.auth.id)",
+        "create": "@request.auth.id != \"\"",
+        "update": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || deal.owner.id = @request.auth.id || created_by.id = @request.auth.id)",
+        "delete": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || deal.owner.id = @request.auth.id || created_by.id = @request.auth.id)"
+      },
+      "fields": [
+        {
+          "name": "deal",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "deals"
+        },
+        {
+          "name": "type",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": ["chamada", "email", "reuniao", "nota"]
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "done",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "due_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created_by",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_activities_deal ON activities (deal)",
+        "CREATE INDEX idx_activities_created ON activities (created DESC)"
+      ]
+    },
+    {
+      "name": "imports",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != \"\"",
+        "view": "@request.auth.id != \"\" && (@request.auth.role = \"gestor\" || imported_by.id = @request.auth.id)",
+        "create": "@request.auth.id != \"\"",
+        "update": "@request.auth.id != \"\" && @request.auth.role = \"gestor\"",
+        "delete": "@request.auth.id != \"\" && @request.auth.role = \"gestor\""
+      },
+      "fields": [
+        {
+          "name": "filename",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "rows_total",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "rows_imported",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "rows_failed",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "imported_by",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_imports_imported_by ON imports (imported_by)",
+        "CREATE INDEX idx_imports_created ON imports (created DESC)"
+      ]
+    }
+  ]
+}
