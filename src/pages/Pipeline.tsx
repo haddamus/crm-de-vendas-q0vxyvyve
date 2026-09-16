@@ -1,18 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import {
-  Search,
-  Filter,
-  Plus,
-  Building2,
-  Calendar,
-  User,
-  DollarSign,
-  GripVertical,
-  SlidersHorizontal,
-  RefreshCw,
-  Sparkles,
-  ArrowRight,
-} from 'lucide-react'
+import { Search, Plus, Building2, Calendar } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import type { Deal, AppUser, DealStage } from '@/types/crm'
 import { STAGES, STAGE_MAP } from '@/types/crm'

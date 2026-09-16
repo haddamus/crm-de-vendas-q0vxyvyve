@@ -1,8 +1,24 @@
-// Fast and lightweight XLSX and CSV parser without heavy external dependencies.
-// Handles standard .xlsx (via ZIP unpacking XML) or .csv text.
+// Parsers for .xlsx (via read-excel-file) and .csv/.txt (custom lightweight parser).
+
+import readXlsxFile from 'read-excel-file'
 
 export interface ParsedSheetRow {
   [colName: string]: string | number
+}
+
+// Converts a cell value from read-excel-file into the plain string format
+// used across the app's row/column model (dates as YYYY-MM-DD).
+function cellToString(cell: unknown): string {
+  if (cell === null || cell === undefined) return ''
+  if (cell instanceof Date) return cell.toISOString().split('T')[0]
+  return String(cell).trim()
+}
+
+// Parses a real .xlsx workbook (first sheet) into a string[][] grid,
+// matching the shape produced by parseCSV.
+export async function parseXLSX(file: File | Blob): Promise<string[][]> {
+  const rows = await readXlsxFile(file)
+  return rows.map((row) => row.map(cellToString))
 }
 
 // Parses a simple CSV text

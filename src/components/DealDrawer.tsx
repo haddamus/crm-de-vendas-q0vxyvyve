@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react'
 import {
   X,
   Calendar,
-  DollarSign,
   User,
   Mail,
   Phone,
-  FileText,
-  Plus,
   Trash2,
   CheckCircle2,
   Circle,
@@ -15,10 +12,8 @@ import {
   Send,
   Building2,
   Edit,
-  Tag,
-  ExternalLink,
 } from 'lucide-react'
-import type { Deal, Activity, AppUser, DealStage, ActivityType } from '@/types/crm'
+import type { Deal, Activity, DealStage, ActivityType } from '@/types/crm'
 import { STAGES, STAGE_MAP, ACTIVITY_TYPE_CONFIG } from '@/types/crm'
 import {
   formatBRL,

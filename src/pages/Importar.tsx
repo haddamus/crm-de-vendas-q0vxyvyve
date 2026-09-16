@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Upload,
   FileSpreadsheet,
   Download,
   CheckCircle2,
-  AlertCircle,
   ArrowRight,
   ArrowLeft,
   FileCheck,
-  Building2,
-  DollarSign,
-  Calendar,
   AlertTriangle,
   RotateCcw,
   History,
-  User,
-  Layers,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import type { AppUser, DealStage } from '@/types/crm'
@@ -29,7 +24,7 @@ import {
   formatDateBR,
 } from '@/services/crm'
 import type { ImportAudit } from '@/types/crm'
-import { parseCSV, downloadTemplate, downloadErrorLog } from '@/lib/xlsxHelper'
+import { parseCSV, parseXLSX, downloadTemplate, downloadErrorLog } from '@/lib/xlsxHelper'
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -58,6 +53,7 @@ interface RowValidation {
 export const Importar: React.FC = () => {
   const { user, role } = useAuth()
   const { toast } = useToast()
+  const navigate = useNavigate()
   const isGestor = role === 'gestor'
 
   // Wizard Steps: 1: Upload, 2: Preview & Mapping, 3: Executing / Finished
@@ -200,8 +196,10 @@ export const Importar: React.FC = () => {
     }
 
     try {
-      const text = await uploadedFile.text()
-      const parsedData = parseCSV(text)
+      const isXlsx = uploadedFile.name.match(/\.xlsx$/i)
+      const parsedData = isXlsx
+        ? await parseXLSX(uploadedFile)
+        : parseCSV(await uploadedFile.text())
 
       if (parsedData.length < 2) {
         toast({
@@ -994,9 +992,7 @@ export const Importar: React.FC = () => {
                 </Button>
 
                 <Button
-                  onClick={() => {
-                    window.location.href = '/pipeline'
-                  }}
+                  onClick={() => navigate('/pipeline')}
                   className="rounded-xl bg-[#E4572E] hover:bg-[#C94F26] text-white font-bold text-xs shadow-md shadow-[#E4572E]/25"
                 >
                   <span>Ver no Pipeline (Kanban)</span>

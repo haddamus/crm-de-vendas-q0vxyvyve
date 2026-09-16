@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   DollarSign,
-  TrendingUp,
   Target,
   Percent,
   Plus,
   ArrowUpRight,
-  ArrowDownRight,
-  Calendar,
   CheckCircle2,
   Clock,
   Building2,
@@ -16,19 +14,8 @@ import {
   ChevronRight,
   Briefcase,
   Layers,
-  Sparkles,
 } from 'lucide-react'
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Cell,
-  PieChart,
-  Pie,
-} from 'recharts'
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts'
 import { useAuth } from '@/context/AuthContext'
 import type { Deal, Activity, AppUser, DealStage } from '@/types/crm'
 import { STAGES, STAGE_MAP, ACTIVITY_TYPE_CONFIG } from '@/types/crm'
@@ -50,6 +37,7 @@ import { useToast } from '@/hooks/use-toast'
 export const Dashboard: React.FC = () => {
   const { user, role } = useAuth()
   const { toast } = useToast()
+  const navigate = useNavigate()
   const isGestor = role === 'gestor'
 
   const [deals, setDeals] = useState<Deal[]>([])
@@ -601,9 +589,7 @@ export const Dashboard: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              window.location.href = '/pipeline'
-            }}
+            onClick={() => navigate('/pipeline')}
             className="rounded-xl text-xs gap-1.5"
           >
             <span>Ver Pipeline Completo</span>
@@ -718,12 +704,11 @@ export const Dashboard: React.FC = () => {
 }
 
 const NavLinktoPipeline: React.FC = () => {
+  const navigate = useNavigate()
   return (
     <Button
       variant="outline"
-      onClick={() => {
-        window.location.href = '/pipeline'
-      }}
+      onClick={() => navigate('/pipeline')}
       className="w-full justify-between rounded-xl h-10 border-[#E7E5E0] text-xs font-bold text-[#1C2321] hover:bg-[#F6F5F2]"
     >
       <span>Ir para o Plano de Ação (Kanban)</span>

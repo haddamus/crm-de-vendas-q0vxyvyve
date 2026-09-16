@@ -25,8 +25,8 @@ export const Login: React.FC = () => {
   const navigate = useNavigate()
   const { toast } = useToast()
 
-  const [email, setEmail] = useState('thomazmcontato@hotmail.com')
-  const [password, setPassword] = useState('Skip@Pass')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -67,17 +67,6 @@ export const Login: React.FC = () => {
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  const fillQuickAccount = (role: 'gestor' | 'vendedor') => {
-    if (role === 'gestor') {
-      setEmail('thomazmcontato@hotmail.com')
-      setPassword('Skip@Pass')
-    } else {
-      setEmail('vendedora@demo.com')
-      setPassword('Skip@Pass')
-    }
-    setErrorMsg(null)
   }
 
   return (
@@ -291,42 +280,6 @@ export const Login: React.FC = () => {
               )}
             </Button>
           </form>
-
-          {/* Quick Demo Access Bar */}
-          <div className="mt-8 pt-6 border-t border-[#E7E5E0]">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#8A938F] mb-3 text-center">
-              Acesso Rápido de Demonstração
-            </p>
-            <div className="grid grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                onClick={() => fillQuickAccount('gestor')}
-                className="p-2.5 rounded-xl border border-purple-200 bg-purple-50/70 hover:bg-purple-100/70 transition-colors text-left group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-purple-900">Gestor(a)</span>
-                  <span className="text-[10px] bg-purple-200 text-purple-800 px-1.5 py-0.5 rounded font-semibold">
-                    Thomaz
-                  </span>
-                </div>
-                <p className="text-[10px] text-purple-700 truncate mt-0.5">Visão equipe completa</p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fillQuickAccount('vendedor')}
-                className="p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100/70 transition-colors text-left group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-emerald-900">Vendedora</span>
-                  <span className="text-[10px] bg-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded font-semibold">
-                    Ana Souza
-                  </span>
-                </div>
-                <p className="text-[10px] text-emerald-700 truncate mt-0.5">Visão própria</p>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
